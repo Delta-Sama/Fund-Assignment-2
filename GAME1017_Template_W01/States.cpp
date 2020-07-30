@@ -100,7 +100,7 @@ void GameState::Enter()
 	m_level = new Level1(this);
 	m_level->Load();
 
-	m_timer = new Label("Title", 700, 50, "Time: 0", { 200,200,255,255 });
+	m_timer = new Label("Title", 750, 20, "Time: 0", { 200,200,255,255 });
 	m_seconds = 0;
 }
 
