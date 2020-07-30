@@ -34,7 +34,7 @@ private:
 class RestartButton : public Button
 {
 public:
-	RestartButton(SDL_Rect src, SDL_FRect dst, SDL_Texture* t);
+	RestartButton(SDL_Rect src, SDL_FRect dst);
 	
 private:
 	virtual void Execute() override;
@@ -44,7 +44,7 @@ private:
 class ExitButton : public Button
 {
 public:
-	ExitButton(SDL_Rect src, SDL_FRect dst, SDL_Texture* t);
+	ExitButton(SDL_Rect src, SDL_FRect dst);
 	
 private:
 	virtual void Execute() override;

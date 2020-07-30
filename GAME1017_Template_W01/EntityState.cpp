@@ -128,10 +128,10 @@ void JumpState::Update()
 {
 	m_player->GetAnimator()->SetNextAnimation("jump");
 
-	m_player->GetBody()->y = FLOOR - JUMPPOWER * (- pow((m_jumpProgress++ - m_factor), 2) + m_factor * m_factor);
+	m_player->GetBody()->y = FLOOR - m_player->GetBody()->h - JUMPPOWER * (- pow((m_jumpProgress++ - m_factor), 2) + m_factor * m_factor);
 	if (m_jumpProgress > m_maxJumpProgress)
 	{
-		m_player->GetBody()->y = FLOOR;
+		m_player->GetBody()->y = FLOOR - m_player->GetBody()->h;
 		m_player->GetStateMachine()->ChangeState(new RunState(m_player));
 		return;
 	}

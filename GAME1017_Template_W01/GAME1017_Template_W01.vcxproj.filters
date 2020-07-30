@@ -77,14 +77,14 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Objects\Source</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectileManager.cpp">
-      <Filter>Managers\Source</Filter>
-    </ClCompile>
     <ClCompile Include="GameController.cpp">
       <Filter>Engine\Source</Filter>
     </ClCompile>
     <ClCompile Include="EntityState.cpp">
       <Filter>Entities\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollingManager.cpp">
+      <Filter>Managers\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,9 +166,6 @@
     <ClInclude Include="GameHUD.h">
       <Filter>UI\Header</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectileManager.h">
-      <Filter>Managers\Header</Filter>
-    </ClInclude>
     <ClInclude Include="Projectile.h">
       <Filter>Objects\Header</Filter>
     </ClInclude>
@@ -183,6 +180,9 @@
     </ClInclude>
     <ClInclude Include="EntityState.h">
       <Filter>Entities\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollingManager.h">
+      <Filter>Managers\Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

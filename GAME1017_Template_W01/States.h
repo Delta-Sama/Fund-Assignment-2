@@ -38,7 +38,10 @@ public:
 private:
 	std::vector<Label*> m_labels;
 
+	Sprite* m_title;
+
 	PlayButton* m_playButton;
+	ExitButton* m_exitButton;
 };
 
 class GameState : public State
@@ -55,8 +58,13 @@ public:
 	Player* GetPlayer() { return m_player; }
 	Level* GetLevel() { return m_level; }
 private:
+	Uint32 m_seconds;
+	Uint16 m_fullFrame;
+	
 	DebugMode* m_debugger;
 	Player* m_player;
+
+	Label* m_timer;
 
 	Level* m_level;
 

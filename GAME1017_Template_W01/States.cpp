@@ -6,7 +6,6 @@
 #include "EventManager.h"
 #include "GameObjectManager.h"
 #include "Level1.h"
-#include "ProjectileManager.h"
 #include "StateManager.h"
 #include "UIManager.h"
 
@@ -14,6 +13,8 @@
 #include <ctime>
 #include <fstream>
 #include <string>
+
+#include "ScrollingManager.h"
 
 void print(std::string msg)
 {
@@ -33,20 +34,25 @@ TitleState::TitleState() {}
 
 void TitleState::Enter()
 {
-	m_labels.push_back(new Label("Title",200,50, "Maxim Dobrivskiy",{0,0,255,255}));
-	m_labels.push_back(new Label("Title", 300, 100, "101290100", { 100,100,255,255 }));
+	m_title = new Sprite({0,0,1160,350},{90,25,900,300},TEMA::GetTexture("title"));
+	
+	m_labels.push_back(new Label("Title",250,300, "Maxim Dobrivskiy",{200,200,255,255}));
 
-	m_playButton = new PlayButton({0,0,512,200},{278,250,424,120});
+	m_playButton = new PlayButton({0,0,512,200},{290,400,500,140});
+	m_exitButton = new ExitButton({ 0,0,400,100 }, { 328,600,424,120 });
 }
 
 void TitleState::Update()
 {
-	m_playButton->Update();
+	if (m_playButton->Update() == 1)
+		return;
+	if (m_exitButton->Update() == 1)
+		return;
 }
 
 void TitleState::Render()
 {
-	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 228, 100, 255, 255);
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 100, 100, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 
 	for (Label* label : m_labels)
@@ -55,6 +61,8 @@ void TitleState::Render()
 	}
 
 	m_playButton->Render();
+	m_title->Render();
+	m_exitButton->Render();
 	
 	State::Render();
 }
@@ -65,7 +73,9 @@ void TitleState::Exit()
 	{
 		delete label;
 	}
-
+	
+	delete m_title;
+	delete m_exitButton;
 	delete m_playButton;
 }
 // End TitleState.
@@ -79,6 +89,8 @@ GameState::GameState()
 
 void GameState::Enter()
 {
+	SCMA::Init();
+	
 	m_debugger = new DebugMode(this);
 
 	m_player = new Player();
@@ -87,7 +99,9 @@ void GameState::Enter()
 	
 	m_level = new Level1(this);
 	m_level->Load();
-	
+
+	m_timer = new Label("Title", 700, 50, "Time: 0", { 200,200,255,255 });
+	m_seconds = 0;
 }
 
 void GameState::Update()
@@ -98,10 +112,21 @@ void GameState::Update()
 	}
 	
 	m_player->update();
-
+	
 	m_gameHUD->Update();
+
+	if (m_fullFrame++ > 60)
+	{
+		m_fullFrame = 0;
+		m_seconds++;
+	}
+
+	std::string txt = "Time: " + std::to_string(m_seconds);
+	m_timer->SetText(txt.c_str());
 	
 	UIMA::Update();
+
+	SCMA::Update();
 
 	CheckCollision();
 
@@ -122,7 +147,7 @@ void GameState::Render()
 	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 64, 128, 255, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
 
-	m_level->Render();
+	SCMA::Render();
 
 	m_debugger->Draw();
 	
@@ -130,7 +155,7 @@ void GameState::Render()
 
 	m_gameHUD->Render();
 
-	PRMA::Render();
+	m_timer->Render();
 	
 	UIMA::Render(LOW);
 	UIMA::Render(MEDIUM);
@@ -148,7 +173,9 @@ void GameState::Exit()
 
 	m_gameHUD->Clean();
 	delete m_gameHUD;
-	
+	delete m_timer;
+
+	SCMA::Clean();
 }
 
 void GameState::Resume() {}
@@ -161,8 +188,8 @@ EndState::EndState()
 
 void EndState::Enter()
 {
-	m_restartButton = new RestartButton({ 0,0,512,200 }, { 278,250,424,120 },TEMA::GetTexture("playButton"));
-	m_exitButton = new ExitButton({ 0,0,400,100 }, { 278,420,424,120 }, TEMA::GetTexture("exit_b"));
+	m_restartButton = new RestartButton({ 0,0,512,200 }, { 278,250,424,120 });
+	m_exitButton = new ExitButton({ 0,0,400,100 }, { 278,420,424,120 });
 	m_finish = false;
 }
 

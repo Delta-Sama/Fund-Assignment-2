@@ -9,9 +9,8 @@
 
 #include <iostream>
 
-#include "ProjectileManager.h"
-#define WIDTH 960
-#define HEIGHT 640
+#define WIDTH 1080
+#define HEIGHT 760
 
 using namespace std;
 
@@ -33,7 +32,6 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 				EVMA::Init();
 				SOMA::Init();
 				TEMA::Init();
-				PRMA::Init();
 			}
 			else return false; // Renderer init fail.
 		}
@@ -45,6 +43,8 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/PlayB.png", "play_b");
 	TEMA::RegisterTexture("Img/ExitB.png", "exit_b");
 	TEMA::RegisterTexture("Img/Player.png", "player");
+	TEMA::RegisterTexture("Img/Title.png", "title");
+	TEMA::RegisterTexture("Img/Backgrounds.png", "background");
 	
 	FOMA::RegisterFont("Img/TITLEFONT.otf", "Title", 50);
 	FOMA::RegisterFont("Img/TITLEFONT.otf", "SmallTitle", 35);

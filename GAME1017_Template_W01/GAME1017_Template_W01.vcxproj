@@ -135,7 +135,7 @@
     <ClCompile Include="Level1.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
-    <ClCompile Include="ProjectileManager.cpp" />
+    <ClCompile Include="ScrollingManager.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="StateManager.cpp" />
@@ -169,7 +169,7 @@
     <ClInclude Include="Level1.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
-    <ClInclude Include="ProjectileManager.h" />
+    <ClInclude Include="ScrollingManager.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="MathManager.h" />

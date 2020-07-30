@@ -15,8 +15,13 @@ public:
 	
 	virtual void update() = 0;
 	virtual void clean() = 0;
+
+	void StopX();
+	void SetAccelX(float a);
+	float GetVelX();
 	
 	void MovementUpdate();
+	
 	Animator* GetAnimator() { return m_animator; }
 	void AddAnimator(Animator* animator);
 
@@ -26,6 +31,13 @@ public:
 
 	EntityState* GetStateMachine() { return m_state; }
 
+private:
+	Vec2 m_velocity;
+	Vec2 m_accel;
+	float m_maxVelocity;
+
+	float m_drag, m_speed;
+	
 protected:
 	Animator* m_animator;
 

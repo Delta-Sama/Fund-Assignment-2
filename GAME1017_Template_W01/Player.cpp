@@ -15,7 +15,7 @@ const float h = 128.0;
 Player::Player()
 	:Entity({0,0,128,128}, {0,0,w,h}, TEMA::GetTexture("player"))
 {
-	m_body = {STARTX,FLOOR,74,122};
+	m_body = {STARTX,FLOOR - 122,74,122};
 	this->SetDstPosition();
 
 	this->SetType(PLAYER);
@@ -38,6 +38,17 @@ Player::~Player()
 
 void Player::update()
 {
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	{
+		this->SetAccelX(-1.0f);
+	}
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+	{
+		this->SetAccelX(1.0f);
+	}
+	
+	MovementUpdate();
+	
 	m_state->Update();
 
 	m_animator->Update();
