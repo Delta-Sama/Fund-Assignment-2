@@ -2,6 +2,7 @@
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
+#include "EntityState.h"
 #include "GameObject.h"
 
 class Animator;
@@ -30,6 +31,8 @@ protected:
 	
 	SDL_FRect m_body;
 	void SetBodyPosition();
+	
+	EntityState* m_state;
 	
 };
 

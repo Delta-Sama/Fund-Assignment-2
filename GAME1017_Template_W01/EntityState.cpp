@@ -1,12 +1,15 @@
 #include "EntityState.h"
 
-BehaviorState::BehaviorState() {}
+BehaviorState::BehaviorState(Player* player) : m_player(player)
+{
+	
+}
 
 BehaviorState::~BehaviorState() {}
 
-EntityState::EntityState()
+EntityState::EntityState(Player* player) : m_player(player)
 {
-	m_state = new RunState();
+	ChangeState(new RunState(m_player));
 }
 
 EntityState::~EntityState()
@@ -19,64 +22,86 @@ void EntityState::Update()
 	
 }
 
+void EntityState::ChangeState(BehaviorState* newState)
+{
+	if (m_state)
+	{
+		m_state->Exit();
+		delete m_state;
+	}
+	m_state = newState;
+	m_state->Enter();
+}
+
 //States:
 
-ScrollState::ScrollState()
+//SCROLL:
+
+ScrollState::ScrollState(Player* player) : BehaviorState(player)
 {
 	
 }
 
 ScrollState::~ScrollState() {}
 
-void ScrollState::Update()
+void ScrollState::Enter()
 {
 	
 }
 
-void ScrollState::Enter()
+void ScrollState::Update()
 {
+	m_player->GetAnimator()->SetNextAnimation("scroll");
 }
 
 void ScrollState::Exit()
 {
 }
 
-JumpState::JumpState()
+//JUMP:
+
+JumpState::JumpState(Player* player) : BehaviorState(player)
 {
 	
 }
 
 JumpState::~JumpState() {}
 
-void JumpState::Update()
+void JumpState::Enter()
 {
 	
 }
 
-void JumpState::Enter()
+void JumpState::Update()
 {
+	m_player->GetAnimator()->SetNextAnimation("jump");
 }
 
 void JumpState::Exit()
 {
+	
 }
 
-RunState::RunState()
+// RUN:
+
+RunState::RunState(Player* player) : BehaviorState(player)
 {
 	
 }
 
 RunState::~RunState() {}
 
-void RunState::Update()
+void RunState::Enter()
 {
 	
 }
 
-void RunState::Enter()
+void RunState::Update()
 {
+	m_player->GetAnimator()->SetNextAnimation("run");
 }
 
 void RunState::Exit()
 {
+	
 }

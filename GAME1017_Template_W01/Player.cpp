@@ -27,6 +27,7 @@ Player::Player()
 	this->GetAnimator()->AddAnimation("scroll", 4, 2, 128, 0, 0, 640);
 
 	m_status = RUN;
+	m_state = new EntityState(this);
 	
 	std::cout << "Player created\n";
 }

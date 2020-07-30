@@ -2,10 +2,12 @@
 #ifndef _ENTITYSTATE_H_
 #define _ENTITYSTATE_H_
 
+class Player;
+
 class BehaviorState
 {
 public:
-	BehaviorState();
+	BehaviorState(Player* player);
 	~BehaviorState();
 
 	virtual void Update() = 0;
@@ -13,21 +15,23 @@ public:
 	virtual void Exit() = 0;
 	
 protected:
+	Player* m_player;
 	
 };
 
 class EntityState
 {
 public:
-	EntityState();
+	EntityState(Player* player);
 	~EntityState();
 
 	void Update();
 
-	void ChangeState();
+	void ChangeState(BehaviorState* newState);
 	
 private:
 	BehaviorState* m_state;
+	Player* m_player;
 	
 };
 
@@ -36,7 +40,7 @@ private:
 class ScrollState : public BehaviorState
 {
 public:
-	ScrollState();
+	ScrollState(Player* player);
 	~ScrollState();
 
 	virtual void Update() override;
@@ -51,7 +55,7 @@ private:
 class JumpState : public BehaviorState
 {
 public:
-	JumpState();
+	JumpState(Player* player);
 	~JumpState();
 
 	virtual void Update() override;
@@ -66,7 +70,7 @@ private:
 class RunState : public BehaviorState
 {
 public:
-	RunState();
+	RunState(Player* player);
 	~RunState();
 
 	virtual void Update() override;
@@ -77,5 +81,7 @@ private:
 
 
 };
+
+#include "Player.h"
 
 #endif
