@@ -4,8 +4,6 @@
 
 #include "Entity.h"
 
-enum Status { RUN, SCROLL, JUMP, DIE };
-
 class Player final : public Entity
 {
 public: // Methods
@@ -20,7 +18,6 @@ public: // Methods
 
 	int movement[2] = { 0,0 };
 private:
-	Status m_status;
 	
 };
 

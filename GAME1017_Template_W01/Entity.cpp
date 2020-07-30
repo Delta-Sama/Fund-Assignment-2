@@ -18,10 +18,10 @@ Entity::~Entity()
 	}
 }
 
-void Entity::SetBodyPosition()
+void Entity::SetDstPosition()
 {
-	this->m_body.x = this->GetDstP()->x + (this->GetDstP()->w - this->m_body.w) / 2;
-	this->m_body.y = this->GetDstP()->y + (this->GetDstP()->h - this->m_body.h) / 2;
+	this->GetDstP()->x = this->m_body.x - (this->GetDstP()->w - this->m_body.w) / 2;
+	this->GetDstP()->y = this->m_body.y - (this->GetDstP()->h - this->m_body.h) / 2;
 }
 
 void Entity::MovementUpdate()

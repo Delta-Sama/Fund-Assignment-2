@@ -63,8 +63,9 @@ public:
 	virtual void Exit() override;
 
 private:
-
-	
+	int m_jumpProgress;
+	int m_factor;
+	int m_maxJumpProgress;
 };
 
 class RunState : public BehaviorState

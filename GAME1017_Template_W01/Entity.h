@@ -2,10 +2,10 @@
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
-#include "EntityState.h"
 #include "GameObject.h"
 
 class Animator;
+class EntityState;
 
 class Entity : public GameObject
 {
@@ -24,18 +24,21 @@ public:
 
 	SDL_FRect* GetBody() { return &m_body; }
 
+	EntityState* GetStateMachine() { return m_state; }
+
 protected:
 	Animator* m_animator;
 
 	bool m_alive;
 	
 	SDL_FRect m_body;
-	void SetBodyPosition();
+	void SetDstPosition();
 	
 	EntityState* m_state;
 	
 };
 
 #include "Animator.h"
+#include "EntityState.h"
 
 #endif
