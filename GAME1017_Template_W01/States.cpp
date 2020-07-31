@@ -89,16 +89,15 @@ GameState::GameState()
 
 void GameState::Enter()
 {
-	SCMA::Init();
+	srand((unsigned)time(0));
 	
 	m_debugger = new DebugMode(this);
 
 	m_player = new Player();
 
+	SCMA::Init(m_player);
+
 	m_gameHUD = new GameHUD(m_player);
-	
-	m_level = new Level1(this);
-	m_level->Load();
 
 	m_timer = new Label("Title", 750, 20, "Time: 0", { 200,200,255,255 });
 	m_seconds = 0;
@@ -167,9 +166,6 @@ void GameState::Exit()
 {
 	delete m_player;
 	delete m_debugger;
-
-	m_level->Clean();
-	delete m_level;
 
 	m_gameHUD->Clean();
 	delete m_gameHUD;

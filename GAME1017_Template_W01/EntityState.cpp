@@ -87,7 +87,8 @@ ScrollState::~ScrollState() {}
 
 void ScrollState::Enter()
 {
-	
+	m_player->GetBody()->h /= 2;
+	m_player->GetBody()->y = FLOOR - m_player->GetBody()->h;
 }
 
 void ScrollState::Update()
@@ -107,6 +108,8 @@ void ScrollState::Update()
 
 void ScrollState::Exit()
 {
+	m_player->GetBody()->h *= 2;
+	m_player->GetBody()->y = FLOOR - m_player->GetBody()->h;
 }
 
 //JUMP:

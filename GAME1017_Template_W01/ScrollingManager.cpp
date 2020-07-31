@@ -1,38 +1,25 @@
 #include "ScrollingManager.h"
+#include "CollisionManager.h"
+#include "TextureManager.h"
+#include "Config.h"
+#include "Engine.h"
 
 #include <iostream>
 
-#include "Config.h"
-#include "Engine.h"
-#include "TextureManager.h"
-
+Player* SCMA::m_player = nullptr;
 std::vector<Sprite*> SCMA::m_scrollingObjects;
 std::vector<Background*> SCMA::m_background;
 std::vector<Floor*> SCMA::m_floor;
 std::vector<Pillar*> SCMA::m_pillars;
-int SCMA::m_windowSizeX;
+std::vector<Obstacle*> SCMA::m_obstacles;
 int SCMA::m_minBackgrounds;
 int SCMA::m_minFloors;
 int SCMA::m_minPillars;
+int SCMA::m_lastObstacleTime = FPS * 5;
 
-const float BACKGROUNDX = 1024.0;
-const float BACKGROUNDY = 768.0;
-Background::Background(float x) : Sprite({0,0,1024,768 },{x,0,BACKGROUNDX,BACKGROUNDY },TEMA::GetTexture("background"))
-{}
-
-const float FLOORX = 512.0;
-const float FLOORY = 256.0;
-Floor::Floor(float x) : Sprite({ 1024,510,512,256 }, { x,FLOOR,FLOORX,FLOORY }, TEMA::GetTexture("background"))
-{}
-
-const float PILLARX = 190.0;
-const float PILLARY = 514.0;
-Pillar::Pillar(float x) : Sprite({ 1024,0,256,511 }, { x,0,PILLARX,PILLARY }, TEMA::GetTexture("background"))
-{}
-
-void ScrollingManager::Init()
+void ScrollingManager::Init(Player* player)
 {
-	SDL_GetWindowSize(Engine::Instance().GetWindow(), &m_windowSizeX, nullptr);
+	m_player = player;
 	m_minBackgrounds = GetMinFitAmount(BACKGROUNDX);
 	m_minFloors = GetMinFitAmount(FLOORX);
 	m_minPillars = GetMinFitAmount(PILLARX);
@@ -42,7 +29,7 @@ int ScrollingManager::GetMinFitAmount(int fitSize)
 {
 	int size = 0;
 	int amount = 0;
-	while (size < m_windowSizeX)
+	while (size < WIDTH)
 	{
 		amount++;
 		size += fitSize;
@@ -76,6 +63,95 @@ void ScrollingManager::DeleteFromArrays(std::vector<Sprite*>::iterator sprt)
 			bck++;
 		}
 	}
+	for (auto obst = m_obstacles.begin(); obst != m_obstacles.end();) {
+		if (*obst == *sprt) {
+			obst = m_obstacles.erase(obst);
+		}
+		else {
+			obst++;
+		}
+	}
+}
+
+void ScrollingManager::AddObstacle(OBSTACLES type,int x, int y)
+{
+	switch (type)
+	{
+	case SPEAR:
+		m_obstacles.push_back(new Spear(WIDTH + x, y));
+		m_scrollingObjects.push_back(m_obstacles.back());
+		break;
+	case SPIKES:
+		m_obstacles.push_back(new Spikes(WIDTH + x));
+		m_scrollingObjects.push_back(m_obstacles.back());
+		break;
+	case SAW:
+		m_obstacles.push_back(new Saw(WIDTH + x, y));
+		break;
+	default:
+		break;
+	}
+}
+
+void ScrollingManager::CreateRandomObstacle()
+{
+	if (--m_lastObstacleTime <= 0)
+	{
+		float length = 1.5;
+		int rnd = 1 + rand() % 7;
+		switch (rnd)
+		{
+		case 1: // SPIKES
+			{
+				AddObstacle(SPIKES);
+			}
+			break;
+		case 2: // SPEAR
+			{
+				AddObstacle(SPEAR);
+			}
+			break;
+		case 3: // SAW
+			{
+				AddObstacle(SAW,0, 96 * (rand() % 2));
+			}
+			break;
+		case 4: // DOUBLE SAW
+			{
+				AddObstacle(SAW, 0, 0);
+				AddObstacle(SAW, 0, 300);
+			}
+			break;
+		case 5: // ROLL-JUMP-ROLL
+			{
+				AddObstacle(SPEAR);
+				AddObstacle(SPIKES, SPEARX + 230);
+				AddObstacle(SPEAR, SPEARX + SPIKESX + 230 * 2);
+				length = 4;
+			}
+			break;
+		case 6: // LONG SPIKES
+			{
+				AddObstacle(SPIKES, 0);
+				AddObstacle(SPIKES, SPIKESX);
+				length = 3;
+			}
+			break;
+		case 7: // JUMP PARTY
+			{
+				AddObstacle(SPIKES, 0);
+				AddObstacle(SPIKES, SPIKESX * 3);
+				AddObstacle(SPIKES, SPIKESX * 6);
+				AddObstacle(SPIKES, SPIKESX * 9);
+				length = 4.5;
+			}
+		break;
+		default:
+			break;
+		}
+
+		m_lastObstacleTime = FPS * length + rand() % 4 * (FPS / 2);
+	}
 }
 
 void ScrollingManager::Update()
@@ -91,7 +167,63 @@ void ScrollingManager::Update()
 		}
 	}
 	
+	RegenerateBackground();
+	CreateRandomObstacle();
 
+	for (Background* bck : m_background) {
+		bck->GetDstP()->x -= BACKMOVE;
+	}
+	
+	for (Pillar* pil : m_pillars) {
+		pil->GetDstP()->x -= MIDMOVE;
+	}
+
+	for (Floor* flr : m_floor) {
+		flr->GetDstP()->x -= FORWMOVE;
+	}
+
+	for (Obstacle* obst : m_obstacles)
+	{
+		obst->GetDstP()->x -= FORWMOVE + obst->GetMoveX();
+		obst->Update();
+		if (COMA::AABBCheck(*obst->GetDstP(), *m_player->GetBody()))
+		{
+			m_player->SetAlive(false);
+		}
+	}
+}
+
+void ScrollingManager::Render()
+{
+	for (Sprite* obj : m_scrollingObjects)
+	{
+		obj->Render();
+	}
+	for (Obstacle* obst : m_obstacles)
+	{
+		obst->Render();
+	}
+}
+
+void ScrollingManager::Clean()
+{
+	m_player = nullptr;
+	for (Sprite* obj : m_scrollingObjects)
+	{
+		delete obj;
+	}
+	m_scrollingObjects.clear();
+	m_scrollingObjects.shrink_to_fit();
+	m_pillars.clear();
+	m_pillars.shrink_to_fit();
+	m_floor.clear();
+	m_floor.shrink_to_fit();
+	m_obstacles.clear();
+	m_obstacles.shrink_to_fit();
+}
+
+void ScrollingManager::RegenerateBackground()
+{
 	while (m_background.size() < m_minBackgrounds) {
 		int maxX = 0;
 		for (Background* bck : m_background) {
@@ -124,47 +256,5 @@ void ScrollingManager::Update()
 		}
 		m_pillars.push_back(new Pillar(maxX));
 		m_scrollingObjects.push_back(m_pillars.back());
-	}
-
-	for (Background* bck : m_background) {
-		bck->GetDstP()->x -= BACKMOVE;
-	}
-	for (Floor* flr : m_floor) {
-		flr->GetDstP()->x -= GENMOVE;
-	}
-	for (Pillar* pil : m_pillars) {
-		pil->GetDstP()->x -= GENMOVE;
-	}
-}
-
-void ScrollingManager::Render()
-{
-	for (Background* bck : m_background)
-	{
-		bck->Render();
-	}
-	for (Pillar* pil : m_pillars)
-	{
-		pil->Render();
-	}
-	for (Floor* flr : m_floor)
-	{
-		flr->Render();
-	}
-}
-
-void ScrollingManager::Clean()
-{
-	for (Background* bck : m_background)
-	{
-		delete bck;
-	}
-	for (Floor* flr : m_floor)
-	{
-		delete flr;
-	}
-	for (Pillar* pil : m_pillars)
-	{
-		delete pil;
 	}
 }

@@ -132,9 +132,8 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Label.cpp" />
-    <ClCompile Include="Level1.cpp" />
+    <ClCompile Include="Obstacles.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ScrollingManager.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -165,10 +164,8 @@
     <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="GameObjectTypes.h" />
     <ClInclude Include="Label.h" />
-    <ClInclude Include="Level.h" />
-    <ClInclude Include="Level1.h" />
+    <ClInclude Include="Obstacles.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Projectile.h" />
     <ClInclude Include="ScrollingManager.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StateManager.h" />

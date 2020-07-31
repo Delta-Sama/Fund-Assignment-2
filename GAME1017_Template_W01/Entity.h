@@ -26,7 +26,8 @@ public:
 	void AddAnimator(Animator* animator);
 
 	bool IsAlive() { return m_alive; }
-
+	void SetAlive(bool alive) { m_alive = alive; }
+	
 	SDL_FRect* GetBody() { return &m_body; }
 
 	EntityState* GetStateMachine() { return m_state; }

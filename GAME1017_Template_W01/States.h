@@ -56,7 +56,7 @@ public:
 	void Resume();
 
 	Player* GetPlayer() { return m_player; }
-	Level* GetLevel() { return m_level; }
+	
 private:
 	Uint32 m_seconds;
 	Uint16 m_fullFrame;
@@ -65,8 +65,6 @@ private:
 	Player* m_player;
 
 	Label* m_timer;
-
-	Level* m_level;
 
 	GameHUD* m_gameHUD;
 };

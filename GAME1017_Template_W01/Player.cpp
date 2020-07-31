@@ -15,7 +15,7 @@ const float h = 128.0;
 Player::Player()
 	:Entity({0,0,128,128}, {0,0,w,h}, TEMA::GetTexture("player"))
 {
-	m_body = {STARTX,FLOOR - 122,74,122};
+	m_body = {STARTX,FLOOR - 128,74,128};
 	this->SetDstPosition();
 
 	this->SetType(PLAYER);

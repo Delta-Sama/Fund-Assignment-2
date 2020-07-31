@@ -6,11 +6,9 @@
 #include "SoundManager.h"
 #include "StateManager.h"
 #include "TextureManager.h"
+#include "Config.h"
 
 #include <iostream>
-
-#define WIDTH 1080
-#define HEIGHT 760
 
 using namespace std;
 
@@ -45,6 +43,7 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	TEMA::RegisterTexture("Img/Player.png", "player");
 	TEMA::RegisterTexture("Img/Title.png", "title");
 	TEMA::RegisterTexture("Img/Backgrounds.png", "background");
+	TEMA::RegisterTexture("Img/Obstacles.png", "obstacles");
 	
 	FOMA::RegisterFont("Img/TITLEFONT.otf", "Title", 50);
 	FOMA::RegisterFont("Img/TITLEFONT.otf", "SmallTitle", 35);
@@ -53,11 +52,14 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	SOMA::SetSoundVolume(40,1);
 	
 	SOMA::Load("Audio/sans.mp3", "background", SOUND_MUSIC);
-	SOMA::SetMusicVolume(11);
+	SOMA::SetMusicVolume(0);// 11);
 	SOMA::PlayMusic("background");
 	
 	STMA::ChangeState(new TitleState);
 	SOMA::AllocateChannels(16);
+
+	//SDL_GetWindowSize(m_pWindow,&WINDOWX,&WINDOWY);
+	
 	m_running = true; // Everything is okay, start the engine.
 	cout << "Engine Init success!" << endl;
 	return true;
