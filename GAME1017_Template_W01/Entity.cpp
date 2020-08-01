@@ -11,6 +11,7 @@ Entity::Entity(SDL_Rect s, SDL_FRect d, SDL_Texture* t) : GameObject(s, d, t)
 	this->m_alive = true;
 	this->m_maxVelocity = MAXVELOCITY;
 	this->m_drag = 0.88;
+	this->m_status = ALIVE;
 }
 
 Entity::~Entity()

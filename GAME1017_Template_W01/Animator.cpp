@@ -62,7 +62,6 @@ void Animator::PlayAnimation()
 		//std::cout << SDL_GetTicks() - lastFrameTime << " vs " << anim->getFramesFrequency() << "\n";
 		if (SDL_GetTicks() - m_lastFrameTime >= anim->GetFramesFrequency())
 		{
-			std::cout << "Played: "<< m_nextAnimation << ", max frames: " << anim->GetMaxFrames() << "\n";
 			m_lastFrameTime = SDL_GetTicks();
 			if (m_entity == nullptr)
 				std::cout << "No entity!!!!!!!!!\n";
@@ -105,7 +104,6 @@ void Animator::Update()
 			if (++(*animRec)->curFrame >= (*animRec)->animation->GetMaxFrames())
 			{
 				delete* animRec;
-				std::cout << "erased anim\n";
 				animRec = m_animRecords.erase(animRec);
 				moved = true;
 			}

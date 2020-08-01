@@ -7,6 +7,8 @@
 class Animator;
 class EntityState;
 
+enum Status { ALIVE, DYING, DIED };
+
 class Entity : public GameObject
 {
 public:
@@ -32,6 +34,9 @@ public:
 
 	EntityState* GetStateMachine() { return m_state; }
 
+	Status GetStatus() { return m_status; }
+	void SetStatus(Status status) { m_status = status; }
+	
 private:
 	Vec2 m_velocity;
 	Vec2 m_accel;
@@ -41,6 +46,8 @@ private:
 	
 protected:
 	Animator* m_animator;
+
+	Status m_status;
 
 	bool m_alive;
 	

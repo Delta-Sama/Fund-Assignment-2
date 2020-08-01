@@ -114,7 +114,7 @@ void GameState::Update()
 	
 	m_gameHUD->Update();
 
-	if (m_fullFrame++ > 60)
+	if (m_fullFrame++ > 60 and m_player->GetStatus() == ALIVE)
 	{
 		m_fullFrame = 0;
 		m_seconds++;
@@ -129,14 +129,13 @@ void GameState::Update()
 
 	CheckCollision();
 
-	if (not m_player->IsAlive())
-	{
-		STMA::ChangeState(new EndState);
-	}
-
 	if (EVMA::KeyPressed(SDL_SCANCODE_P))
 	{
 		STMA::PushState(new PauseState);
+	}
+	if (not m_player->IsAlive())
+	{
+		STMA::ChangeState(new EndState);
 	}
 }
 

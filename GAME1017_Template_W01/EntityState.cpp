@@ -174,6 +174,7 @@ void DieState::Enter()
 	Animation* dieAnim = m_player->GetAnimator()->GetAnimation("die");
 	m_diedAnim = dieAnim->GetFramesFrequency()/10 * dieAnim->GetMaxFrames() + FPS * 2;
 	m_player->GetAnimator()->PlayFullAnimation("die");
+	m_player->SetStatus(DYING);
 }
 
 void DieState::Update()
@@ -181,7 +182,7 @@ void DieState::Update()
 	//std::cout << "Die update :" << m_diedAnim << "\n";
 	if (m_diedAnim-- <= 0)
 	{
-		std::cout << "Died\n";
+		m_player->SetStatus(DIED);
 		m_player->SetAlive(false);
 		return;
 	}
