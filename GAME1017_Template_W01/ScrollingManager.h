@@ -20,6 +20,7 @@ public:
 	static void AddObstacle(OBSTACLES type, int x = 0, int y = 0);
 	static void CreateRandomObstacle();
 	static void RegenerateBackground();
+	static void Stop();
 
 	static std::vector<Obstacle*>* GetObstacles() { return &m_obstacles; }
 
@@ -39,6 +40,8 @@ private:
 	static int m_minBackgrounds;
 	static int m_minFloors;
 	static int m_minPillars;
+
+	static bool m_moving;
 };
 
 typedef ScrollingManager SCMA;

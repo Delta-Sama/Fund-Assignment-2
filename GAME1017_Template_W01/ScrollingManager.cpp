@@ -16,15 +16,13 @@ int SCMA::m_minBackgrounds;
 int SCMA::m_minFloors;
 int SCMA::m_minPillars;
 int SCMA::m_lastObstacleTime;
+bool SCMA::m_moving;
 
 void ScrollingManager::Init(Player* player)
 {
 	m_lastObstacleTime = FPS * 5;
 	m_player = player;
-	std::cout << m_background.size() << "\n";
-	std::cout << m_floor.size() << "\n";
-	std::cout << m_pillars.size() << "\n";
-	std::cout << m_obstacles.size() << "\n";
+	m_moving = true;
 	m_minBackgrounds = GetMinFitAmount(BACKGROUNDX);
 	m_minFloors = GetMinFitAmount(FLOORX);
 	m_minPillars = GetMinFitAmount(PILLARX);
@@ -161,6 +159,10 @@ void ScrollingManager::CreateRandomObstacle()
 
 void ScrollingManager::Update()
 {
+	if (not m_moving)
+	{
+		return;
+	}
 	for (auto sprt = m_scrollingObjects.begin(); sprt != m_scrollingObjects.end();) {
 		if ((*sprt)->GetDstP()->x + (*sprt)->GetDstP()->w < 0) {
 			DeleteFromArrays(sprt);
@@ -193,7 +195,9 @@ void ScrollingManager::Update()
 		obst->Update();
 		if (COMA::AABBCheck(*obst->GetDstP(), *m_player->GetBody()))
 		{
-			m_player->SetAlive(false);
+			m_player->GetStateMachine()->ChangeState(new DieState(m_player));
+			Stop();
+			return;
 		}
 	}
 }
@@ -264,4 +268,9 @@ void ScrollingManager::RegenerateBackground()
 		m_pillars.push_back(new Pillar(maxX));
 		m_scrollingObjects.push_back(m_pillars.back());
 	}
+}
+
+void ScrollingManager::Stop()
+{
+	m_moving = false;
 }

@@ -23,9 +23,10 @@ Player::Player()
 	this->AddAnimator(new Animator(this));
 
 	this->GetAnimator()->AddAnimation("run", 8, 1, 128, 0,0,512);
-	this->GetAnimator()->AddAnimation("jump", 1, 2, 0, 0, 128*8, 512);
-	this->GetAnimator()->AddAnimation("scroll", 4, 2, 128, 0, 0, 640);
-
+	this->GetAnimator()->AddAnimation("jump", 1, 2, 0, 0, 128 * 8, 512);
+	this->GetAnimator()->AddAnimation("roll", 4, 2, 128, 0, 0, 640);
+	this->GetAnimator()->AddAnimation("die", 5, 3, 128, 0, 128 * 4, 640);
+	
 	m_state = new EntityState(this);
 	
 	std::cout << "Player created\n";
@@ -38,21 +39,11 @@ Player::~Player()
 
 void Player::update()
 {
-	if (EVMA::KeyHeld(SDL_SCANCODE_A))
-	{
-		this->SetAccelX(-1.0f);
-	}
-	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
-	{
-		this->SetAccelX(1.0f);
-	}
+	m_state->Update();
 	
 	MovementUpdate();
-	
-	m_state->Update();
 
 	m_animator->Update();
-	m_animator->PlayAnimation();
 	
 	this->SetDstPosition();
 }

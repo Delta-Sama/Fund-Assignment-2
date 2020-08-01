@@ -1,5 +1,6 @@
 #include "EntityState.h"
 #include "Config.h"
+#include "Engine.h"
 #include "EventManager.h"
 
 BehaviorState::BehaviorState(Player* player) : m_player(player)
@@ -42,10 +43,7 @@ void EntityState::ChangeState(BehaviorState* newState)
 
 // RUN:
 
-RunState::RunState(Player* player) : BehaviorState(player)
-{
-
-}
+RunState::RunState(Player* player) : BehaviorState(player) {}
 
 RunState::~RunState() {}
 
@@ -57,10 +55,18 @@ void RunState::Enter()
 void RunState::Update()
 {
 	m_player->GetAnimator()->SetNextAnimation("run");
-	
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	{
+		m_player->SetAccelX(-1.0f);
+	}
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+	{
+		m_player->SetAccelX(1.0f);
+	}
 	if (EVMA::KeyHeld(SDL_SCANCODE_S))
 	{
-		m_player->GetStateMachine()->ChangeState(new ScrollState(m_player));
+		m_player->GetStateMachine()->ChangeState(new RollState(m_player));
 		return;
 	}
 	if (EVMA::KeyPressed(SDL_SCANCODE_SPACE))
@@ -76,24 +82,32 @@ void RunState::Exit()
 }
 
 
-//SCROLL:
+//Roll:
 
-ScrollState::ScrollState(Player* player) : BehaviorState(player)
+RollState::RollState(Player* player) : BehaviorState(player)
 {
 	
 }
 
-ScrollState::~ScrollState() {}
+RollState::~RollState() {}
 
-void ScrollState::Enter()
+void RollState::Enter()
 {
 	m_player->GetBody()->h /= 2;
 	m_player->GetBody()->y = FLOOR - m_player->GetBody()->h;
 }
 
-void ScrollState::Update()
+void RollState::Update()
 {
-	m_player->GetAnimator()->SetNextAnimation("scroll");
+	m_player->GetAnimator()->SetNextAnimation("roll");
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	{
+		m_player->SetAccelX(-1.0f);
+	}
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+	{
+		m_player->SetAccelX(1.0f);
+	}
 	if (not EVMA::KeyHeld(SDL_SCANCODE_S))
 	{
 		m_player->GetStateMachine()->ChangeState(new RunState(m_player));
@@ -106,7 +120,7 @@ void ScrollState::Update()
 	}
 }
 
-void ScrollState::Exit()
+void RollState::Exit()
 {
 	m_player->GetBody()->h *= 2;
 	m_player->GetBody()->y = FLOOR - m_player->GetBody()->h;
@@ -114,17 +128,14 @@ void ScrollState::Exit()
 
 //JUMP:
 
-JumpState::JumpState(Player* player) : BehaviorState(player)
-{
-	m_factor = 20;
-	m_maxJumpProgress = m_factor * 2;
-}
+JumpState::JumpState(Player* player) : BehaviorState(player) {}
 
 JumpState::~JumpState() {}
 
 void JumpState::Enter()
 {
-	
+	m_factor = 20;
+	m_maxJumpProgress = m_factor * 2;
 }
 
 void JumpState::Update()
@@ -132,6 +143,15 @@ void JumpState::Update()
 	m_player->GetAnimator()->SetNextAnimation("jump");
 
 	m_player->GetBody()->y = FLOOR - m_player->GetBody()->h - JUMPPOWER * (- pow((m_jumpProgress++ - m_factor), 2) + m_factor * m_factor);
+
+	if (EVMA::KeyHeld(SDL_SCANCODE_A))
+	{
+		m_player->SetAccelX(-1.0f);
+	}
+	else if (EVMA::KeyHeld(SDL_SCANCODE_D))
+	{
+		m_player->SetAccelX(1.0f);
+	}
 	if (m_jumpProgress > m_maxJumpProgress)
 	{
 		m_player->GetBody()->y = FLOOR - m_player->GetBody()->h;
@@ -141,6 +161,34 @@ void JumpState::Update()
 }
 
 void JumpState::Exit()
+{
+	
+}
+
+DieState::DieState(Player* player) : BehaviorState(player) {}
+
+DieState::~DieState() {}
+
+void DieState::Enter()
+{
+	Animation* dieAnim = m_player->GetAnimator()->GetAnimation("die");
+	m_diedAnim = dieAnim->GetFramesFrequency()/10 * dieAnim->GetMaxFrames() + FPS * 2;
+	m_player->GetAnimator()->PlayFullAnimation("die");
+}
+
+void DieState::Update()
+{
+	//std::cout << "Die update :" << m_diedAnim << "\n";
+	if (m_diedAnim-- <= 0)
+	{
+		std::cout << "Died\n";
+		m_player->SetAlive(false);
+		return;
+	}
+
+}
+
+void DieState::Exit()
 {
 	
 }

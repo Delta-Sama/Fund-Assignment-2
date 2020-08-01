@@ -37,11 +37,11 @@ private:
 
 //States:
 
-class ScrollState : public BehaviorState
+class RollState : public BehaviorState
 {
 public:
-	ScrollState(Player* player);
-	~ScrollState();
+	RollState(Player* player);
+	~RollState();
 
 	virtual void Update() override;
 	virtual void Enter() override;
@@ -80,6 +80,21 @@ public:
 
 private:
 
+
+};
+
+class DieState : public BehaviorState
+{
+public:
+	DieState(Player* player);
+	~DieState();
+
+	virtual void Update() override;
+	virtual void Enter() override;
+	virtual void Exit() override;
+
+private:
+	int m_diedAnim;
 
 };
 

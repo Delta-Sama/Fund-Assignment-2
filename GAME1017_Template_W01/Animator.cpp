@@ -62,6 +62,7 @@ void Animator::PlayAnimation()
 		//std::cout << SDL_GetTicks() - lastFrameTime << " vs " << anim->getFramesFrequency() << "\n";
 		if (SDL_GetTicks() - m_lastFrameTime >= anim->GetFramesFrequency())
 		{
+			std::cout << "Played: "<< m_nextAnimation << ", max frames: " << anim->GetMaxFrames() << "\n";
 			m_lastFrameTime = SDL_GetTicks();
 			if (m_entity == nullptr)
 				std::cout << "No entity!!!!!!!!!\n";
@@ -84,6 +85,17 @@ void Animator::AddAnimation(const std::string& key, Uint32 maxFrames, Uint32 pri
 
 void Animator::Update()
 {
+	Animation* nextAnim = m_animationsMap[m_nextAnimation];
+	for (AnimRecord* rec : m_animRecords)
+	{
+		if ((nextAnim == nullptr) or (rec->animation->GetPriotity() >= nextAnim->GetPriotity()))
+		{
+			m_nextAnimation = rec->animation->getName();
+		}
+	}
+
+	PlayAnimation();
+
 	for (auto animRec = m_animRecords.begin(); animRec != m_animRecords.end();)
 	{
 		bool moved = false;
@@ -93,6 +105,7 @@ void Animator::Update()
 			if (++(*animRec)->curFrame >= (*animRec)->animation->GetMaxFrames())
 			{
 				delete* animRec;
+				std::cout << "erased anim\n";
 				animRec = m_animRecords.erase(animRec);
 				moved = true;
 			}
@@ -100,15 +113,6 @@ void Animator::Update()
 		if (not moved)
 		{
 			animRec++;
-		}
-	}
-
-	Animation* nextAnim = m_animationsMap[m_nextAnimation];
-	for (AnimRecord* rec : m_animRecords)
-	{
-		if ((nextAnim == nullptr) or (rec->animation->GetPriotity() >= nextAnim->GetPriotity()))
-		{
-			m_nextAnimation = rec->animation->getName();
 		}
 	}
 }
