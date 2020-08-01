@@ -38,8 +38,8 @@ void TitleState::Enter()
 	
 	m_labels.push_back(new Label("Title",250,300, "Maxim Dobrivskiy",{200,200,255,255}));
 
-	m_playButton = new PlayButton({0,0,512,200},{290,400,500,140});
-	m_exitButton = new ExitButton({ 0,0,400,100 }, { 328,600,424,120 });
+	m_playButton = new PlayButton({(WIDTH - 400)/2,400,400,125});
+	m_exitButton = new ExitButton({ (WIDTH - 400) / 2,600,400,125 });
 }
 
 void TitleState::Update()
@@ -133,6 +133,11 @@ void GameState::Update()
 	{
 		STMA::ChangeState(new EndState);
 	}
+
+	if (EVMA::KeyPressed(SDL_SCANCODE_P))
+	{
+		STMA::PushState(new PauseState);
+	}
 }
 
 void GameState::CheckCollision()
@@ -184,24 +189,25 @@ EndState::EndState()
 
 void EndState::Enter()
 {
-	m_restartButton = new RestartButton({ 0,0,512,200 }, { 278,250,424,120 });
-	m_exitButton = new ExitButton({ 0,0,400,100 }, { 278,420,424,120 });
+	m_restartButton = new RestartButton({ (WIDTH - 400) / 2,250,400,125 });
+	m_exitButton = new ExitButton({ (WIDTH - 400) / 2,420,400,125 });
 	m_finish = false;
 }
 
 void EndState::Update()
 {
-	//if (m_restartButton->Update() == 1)
-		//return;
+	if (m_restartButton->Update() == 1)
+		return;
 	if (m_exitButton->Update() == 1)
 		return;
 }
 
 void EndState::Render()
 {
+	SDL_SetRenderDrawColor(Engine::Instance().GetRenderer(), 255, 180, 0, 255);
 	SDL_RenderClear(Engine::Instance().GetRenderer());
-
-	//m_restartButton->Render();
+	
+	m_restartButton->Render();
 	m_exitButton->Render();
 	
 	State::Render();
@@ -209,7 +215,47 @@ void EndState::Render()
 
 void EndState::Exit()
 {
-	//delete m_exitButton;
-	//delete m_restartButton;
+	delete m_exitButton;
+	delete m_restartButton;
 }
+
+// End ExitState.
+
+// Begin PauseState.
+
+PauseState::PauseState()
+{}
+
+void PauseState::Enter()
+{
+	m_blackScreen = new Sprite({ 0,0,64,64 }, { 0,0,WIDTH,HEIGHT }, TEMA::GetTexture("black_screen"));
+	m_pauseLabel = new Sprite({ 0,0,500,200 }, { (WIDTH - 500) / 2,75,500,200 }, TEMA::GetTexture("pause"));
+	m_resumeButton = new ResumeButton({ (WIDTH - 400) / 2,350,400,125 });
+}
+
+void PauseState::Update()
+{
+	if (EVMA::KeyPressed(SDL_SCANCODE_P))
+	{
+		STMA::PopState();
+		return;
+	}
+	m_resumeButton->Update();
+}
+
+void PauseState::Render()
+{
+	STMA::GetStates()[0]->Render();
+	m_blackScreen->Render();
+	m_pauseLabel->Render();
+	m_resumeButton->Render();
+}
+
+void PauseState::Exit()
+{
+	delete m_blackScreen;
+	delete m_resumeButton;
+	delete m_pauseLabel;
+}
+
 //End EndState

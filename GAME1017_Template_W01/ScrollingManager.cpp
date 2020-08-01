@@ -15,11 +15,16 @@ std::vector<Obstacle*> SCMA::m_obstacles;
 int SCMA::m_minBackgrounds;
 int SCMA::m_minFloors;
 int SCMA::m_minPillars;
-int SCMA::m_lastObstacleTime = FPS * 5;
+int SCMA::m_lastObstacleTime;
 
 void ScrollingManager::Init(Player* player)
 {
+	m_lastObstacleTime = FPS * 5;
 	m_player = player;
+	std::cout << m_background.size() << "\n";
+	std::cout << m_floor.size() << "\n";
+	std::cout << m_pillars.size() << "\n";
+	std::cout << m_obstacles.size() << "\n";
 	m_minBackgrounds = GetMinFitAmount(BACKGROUNDX);
 	m_minFloors = GetMinFitAmount(FLOORX);
 	m_minPillars = GetMinFitAmount(PILLARX);
@@ -214,6 +219,8 @@ void ScrollingManager::Clean()
 	}
 	m_scrollingObjects.clear();
 	m_scrollingObjects.shrink_to_fit();
+	m_background.clear();
+	m_background.shrink_to_fit();
 	m_pillars.clear();
 	m_pillars.shrink_to_fit();
 	m_floor.clear();

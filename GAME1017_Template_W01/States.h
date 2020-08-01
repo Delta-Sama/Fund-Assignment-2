@@ -84,4 +84,19 @@ private:
 	
 };
 
+class PauseState : public State
+{
+public:
+	PauseState();
+	void Update();
+	void Render();
+	void Enter();
+	void Exit();
+private:
+	Sprite* m_blackScreen;
+	Sprite* m_pauseLabel;
+	ResumeButton* m_resumeButton;
+	
+};
+
 #endif

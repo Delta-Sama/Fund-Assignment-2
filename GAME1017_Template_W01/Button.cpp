@@ -58,9 +58,10 @@ void Button::Render()
 
 // Create button subclasses and their overridden Execute methods below...
 
-PlayButton::PlayButton(SDL_Rect src, SDL_FRect dst) :Button(src, dst, TEMA::GetTexture("play_b")) {}
-RestartButton::RestartButton(SDL_Rect src, SDL_FRect dst) : Button(src, dst, TEMA::GetTexture("restart_b")) {}
-ExitButton::ExitButton(SDL_Rect src, SDL_FRect dst) : Button(src, dst, TEMA::GetTexture("exit_b")) {}
+PlayButton::PlayButton(SDL_FRect dst) :Button({ 0,0,800,250 }, dst, TEMA::GetTexture("play_b")) {}
+RestartButton::RestartButton(SDL_FRect dst) : Button({ 0,0,800,250 }, dst, TEMA::GetTexture("restart_b")) {}
+ExitButton::ExitButton(SDL_FRect dst) : Button({0,0,800,250}, dst, TEMA::GetTexture("exit_b")) {}
+ResumeButton::ResumeButton(SDL_FRect dst) : Button({ 0,0,800,250 }, dst, TEMA::GetTexture("resume_b")) {}
 
 void PlayButton::Execute()
 {
@@ -76,4 +77,9 @@ void ExitButton::Execute()
 {
 	Engine::Instance().setRunning(false);
 	exit(0);
+}
+
+void ResumeButton::Execute()
+{
+	STMA::PopState();
 }

@@ -24,7 +24,7 @@ protected:
 class PlayButton : public Button
 {
 public:
-	PlayButton(SDL_Rect src, SDL_FRect dst);
+	PlayButton(SDL_FRect dst);
 	
 private:
 	virtual void Execute() override;
@@ -34,7 +34,7 @@ private:
 class RestartButton : public Button
 {
 public:
-	RestartButton(SDL_Rect src, SDL_FRect dst);
+	RestartButton(SDL_FRect dst);
 	
 private:
 	virtual void Execute() override;
@@ -44,11 +44,21 @@ private:
 class ExitButton : public Button
 {
 public:
-	ExitButton(SDL_Rect src, SDL_FRect dst);
+	ExitButton(SDL_FRect dst);
 	
 private:
 	virtual void Execute() override;
 	
+};
+
+class ResumeButton : public Button
+{
+public:
+	ResumeButton(SDL_FRect dst);
+
+private:
+	virtual void Execute() override;
+
 };
 
 #endif
