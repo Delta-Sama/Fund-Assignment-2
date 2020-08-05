@@ -83,11 +83,11 @@ private:
 
 };
 
-class DieState : public BehaviorState
+class DeathState : public BehaviorState
 {
 public:
-	DieState(Player* player);
-	~DieState();
+	DeathState(Player* player);
+	~DeathState();
 
 	virtual void Update() override;
 	virtual void Enter() override;

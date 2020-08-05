@@ -52,11 +52,13 @@ bool Engine::Init(const char* title, int xpos, int ypos, int width, int height, 
 	FOMA::RegisterFont("Img/TITLEFONT.otf", "Title", 50);
 	FOMA::RegisterFont("Img/TITLEFONT.otf", "SmallTitle", 35);
 	
-	SOMA::Load("Audio/projectile.wav", "projectile", SOUND_SFX);
-	SOMA::SetSoundVolume(40,1);
+	SOMA::Load("Audio/jump.wav", "jump", SOUND_SFX);
+	SOMA::SetSoundVolume(128,1);
+	SOMA::Load("Audio/death.mp3", "death", SOUND_SFX);
+	SOMA::SetSoundVolume(20, 2);
 	
-	SOMA::Load("Audio/sans.mp3", "background", SOUND_MUSIC);
-	SOMA::SetMusicVolume(0);// 11);
+	SOMA::Load("Audio/papyrus.mp3", "background", SOUND_MUSIC);
+	SOMA::SetMusicVolume(11);// 11);
 	SOMA::PlayMusic("background");
 	
 	STMA::ChangeState(new TitleState);

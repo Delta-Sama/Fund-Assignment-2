@@ -2,6 +2,7 @@
 #include "Config.h"
 #include "Engine.h"
 #include "EventManager.h"
+#include "SoundManager.h"
 
 BehaviorState::BehaviorState(Player* player) : m_player(player)
 {
@@ -136,6 +137,7 @@ void JumpState::Enter()
 {
 	m_factor = 20;
 	m_maxJumpProgress = m_factor * 2;
+	SOMA::PlaySound("jump", 0, 1);
 }
 
 void JumpState::Update()
@@ -165,19 +167,20 @@ void JumpState::Exit()
 	
 }
 
-DieState::DieState(Player* player) : BehaviorState(player) {}
+DeathState::DeathState(Player* player) : BehaviorState(player) {}
 
-DieState::~DieState() {}
+DeathState::~DeathState() {}
 
-void DieState::Enter()
+void DeathState::Enter()
 {
 	Animation* dieAnim = m_player->GetAnimator()->GetAnimation("die");
 	m_diedAnim = dieAnim->GetFramesFrequency()/10 * dieAnim->GetMaxFrames() + FPS * 2;
 	m_player->GetAnimator()->PlayFullAnimation("die");
 	m_player->SetStatus(DYING);
+	SOMA::PlaySound("death", 0, 2);
 }
 
-void DieState::Update()
+void DeathState::Update()
 {
 	//std::cout << "Die update :" << m_diedAnim << "\n";
 	if (m_diedAnim-- <= 0)
@@ -189,7 +192,7 @@ void DieState::Update()
 
 }
 
-void DieState::Exit()
+void DeathState::Exit()
 {
 	
 }

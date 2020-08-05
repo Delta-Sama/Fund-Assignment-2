@@ -230,6 +230,7 @@ void PauseState::Enter()
 	m_blackScreen = new Sprite({ 0,0,64,64 }, { 0,0,WIDTH,HEIGHT }, TEMA::GetTexture("black_screen"));
 	m_pauseLabel = new Sprite({ 0,0,500,200 }, { (WIDTH - 500) / 2,75,500,200 }, TEMA::GetTexture("pause"));
 	m_resumeButton = new ResumeButton({ (WIDTH - 400) / 2,350,400,125 });
+	m_exitButton = new ExitButton({ (WIDTH - 400) / 2,500,400,125 });
 }
 
 void PauseState::Update()
@@ -239,7 +240,10 @@ void PauseState::Update()
 		STMA::PopState();
 		return;
 	}
-	m_resumeButton->Update();
+	if (m_resumeButton->Update() == 1)
+		return;
+	if (m_exitButton->Update() == 1)
+		return;
 }
 
 void PauseState::Render()
@@ -248,12 +252,14 @@ void PauseState::Render()
 	m_blackScreen->Render();
 	m_pauseLabel->Render();
 	m_resumeButton->Render();
+	m_exitButton->Render();
 }
 
 void PauseState::Exit()
 {
 	delete m_blackScreen;
 	delete m_resumeButton;
+	delete m_exitButton;
 	delete m_pauseLabel;
 }
 

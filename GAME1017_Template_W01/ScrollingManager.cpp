@@ -195,7 +195,7 @@ void ScrollingManager::Update()
 		obst->Update();
 		if (COMA::AABBCheck(*obst->GetDstP(), *m_player->GetBody()))
 		{
-			m_player->GetStateMachine()->ChangeState(new DieState(m_player));
+			m_player->GetStateMachine()->ChangeState(new DeathState(m_player));
 			Stop();
 			return;
 		}

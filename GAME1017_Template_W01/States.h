@@ -96,6 +96,7 @@ private:
 	Sprite* m_blackScreen;
 	Sprite* m_pauseLabel;
 	ResumeButton* m_resumeButton;
+	ExitButton* m_exitButton;
 	
 };
 
